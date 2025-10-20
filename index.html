@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>仪表盘</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+</head>
+<body class="bg-gray-50">
+  <div class="mx-auto container-root">
+    <!-- header: countdown + settings -->
+    <div class="flex justify-between items-start py-4">
+      <div></div>
+      <div class="text-right">
+        <div id="countdown-label" class="text-sm text-gray-500">距 XX 还有</div>
+        <div id="countdown-days" class="text-3xl font-bold">0 天</div>
+      </div>
+      <div class="ml-4">
+        <!-- 添加 hover/焦点 效果 -->
+        <button id="settings-btn" class="px-3 py-1 bg-white rounded shadow hover:shadow-lg transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-300">设置</button>
+      </div>
+    </div>
+
+    <!-- banner -->
+    <div class="relative rounded-xl overflow-hidden banner-container hover:shadow-2xl transition-shadow duration-500">
+      <img id="banner-img" src="./img/banner.png" alt="banner" class="w-full h-48 object-cover transition-transform duration-700 transform hover:scale-105" />
+      <div class="absolute inset-0 bg-black/20"></div>
+      <div class="absolute left-6 top-6 text-white">
+        <div class="text-2xl font-semibold" id="greeting">上午好！ 现在是 --:--</div>
+        <div class="mt-1 text-lg" id="daily-hitokoto">加载中...</div>
+      </div>
+    </div>
+
+    <!-- weather -->
+    <section class="mt-6 bg-white rounded-xl p-4 shadow">
+      <h2 class="text-xl font-semibold mb-3">天气</h2>
+      <div id="weather-root" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div id="current-weather" class="p-4 bg-blue-50 rounded">加载实时天气...</div>
+        <div id="five-day" class="p-4 bg-white rounded md:col-span-2">加载 5 天天气...</div>
+      </div>
+      <div class="mt-3">
+        <h3 class="text-sm text-gray-500 mb-2">12 小时内降水（示意）</h3>
+        <div id="hourly-precip" class="flex gap-2 items-end h-24"></div>
+      </div>
+    </section>
+
+    <!-- search -->
+    <section class="mt-6">
+      <div class="bg-white rounded-xl p-4 shadow flex gap-3 items-center">
+        <select id="search-engine" class="px-2 py-1 border rounded">
+          <option value="https://www.google.com/search?q=">Google</option>
+          <option value="https://www.baidu.com/s?wd=">百度</option>
+          <option value="https://www.bing.com/search?q=">Bing</option>
+        </select>
+        <input id="search-input" class="flex-1 px-3 py-2 border rounded" placeholder="输入搜索，回车或点击搜索" />
+        <button id="search-btn" class="px-4 py-2 bg-indigo-600 text-white rounded">搜索</button>
+      </div>
+    </section>
+
+    <!-- nav -->
+    <section class="mt-6">
+      <div id="nav-root" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+    </section>
+  </div>
+
+  <!-- settings modal: 添加 flex，使移除 hidden 时居中 -->
+  <div id="settings-modal" class="fixed inset-0 bg-black/40 hidden flex items-center justify-center">
+    <div class="bg-white rounded-xl p-6 w-full max-w-2xl">
+      <h3 class="text-lg font-semibold mb-3">设置</h3>
+      <div class="space-y-3">
+        <div>
+          <label class="block text-sm text-gray-600">Banner 图片 URL</label>
+          <input id="banner-url" class="w-full mt-1 px-3 py-2 border rounded" placeholder="./img/banner.png" />
+          <button id="save-banner" class="mt-2 px-3 py-1 bg-indigo-600 text-white rounded">保存 Banner</button>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600">倒计时目标日期</label>
+          <input id="countdown-date" type="date" class="mt-1 px-3 py-2 border rounded" />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600">天气位置（可填经度 纬度 或 使用城市搜索）</label>
+          <div class="flex gap-2 mt-1">
+            <input id="lat-input" placeholder="纬度" class="px-3 py-2 border rounded" />
+            <input id="lon-input" placeholder="经度" class="px-3 py-2 border rounded" />
+          </div>
+          <div class="mt-2">
+            <input id="city-search" placeholder="搜索城市名" class="px-3 py-2 border rounded w-2/3" />
+            <button id="city-search-btn" class="px-3 py-1 bg-gray-800 text-white rounded ml-2">搜索城市</button>
+            <div id="city-results" class="mt-2"></div>
+          </div>
+        </div>
+        <div class="text-right">
+          <button id="close-settings" class="px-3 py-1 bg-gray-200 rounded">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./assets/js/app.js"></script>
+</body>
+</html>

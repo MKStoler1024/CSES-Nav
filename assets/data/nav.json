@@ -1,0 +1,20 @@
+{
+  "tabs": [
+    {
+      "title": "常用工具",
+      "items": [
+        { "name": "GitHub", "url": "https://github.com" },
+        { "name": "StackOverflow", "url": "https://stackoverflow.com" },
+        { "name": "MDN", "url": "https://developer.mozilla.org" },
+        { "name": "LeetCode", "url": "https://leetcode.cn" }
+      ]
+    },
+    {
+      "title": "学习",
+      "items": [
+        { "name": "CSDN", "url": "https://www.csdn.net" },
+        { "name": "B 站", "url": "https://www.bilibili.com" }
+      ]
+    }
+  ]
+}
