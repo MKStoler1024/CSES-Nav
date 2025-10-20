@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>仪表盘</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts for countdown and banner -->
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/css/styles.css" />
 </head>
 <body class="bg-gray-50">
@@ -13,37 +15,34 @@
     <div class="flex justify-between items-start py-4">
       <div></div>
       <div class="text-right">
-        <div id="countdown-label" class="text-sm text-gray-500">距 XX 还有</div>
-        <div id="countdown-days" class="text-3xl font-bold">0 天</div>
+        <div id="countdown-label" class="text-sm text-gray-500 countdown-font">距 XX 还有</div>
+        <div id="countdown-days" class="text-3xl font-bold countdown-font">0 天</div>
       </div>
       <div class="ml-4">
-        <!-- 添加 hover/焦点 效果 -->
         <button id="settings-btn" class="px-3 py-1 bg-white rounded shadow hover:shadow-lg transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-300">设置</button>
       </div>
     </div>
 
-    <!-- banner -->
-    <div class="relative rounded-xl overflow-hidden banner-container hover:shadow-2xl transition-shadow duration-500">
-      <img id="banner-img" src="./img/banner.png" alt="banner" class="w-full h-48 object-cover transition-transform duration-700 transform hover:scale-105" />
-      <div class="absolute inset-0 bg-black/20"></div>
-      <div class="absolute left-6 top-6 text-white">
-        <div class="text-2xl font-semibold" id="greeting">上午好！ 现在是 --:--</div>
-        <div class="mt-1 text-lg" id="daily-hitokoto">加载中...</div>
+    <!-- banner 改为左右布局：左图右侧天气卡 -->
+    <div class="relative rounded-xl overflow-hidden banner-wrap flex items-stretch gap-4">
+      <div class="relative rounded-xl overflow-hidden flex-1 banner-container">
+        <img id="banner-img" src="./img/banner.png" alt="banner" class="w-full h-full object-cover" />
+        <div class="absolute inset-0 bg-black/20"></div>
+        <div class="absolute left-6 top-6 text-white banner-font">
+          <div class="text-3xl font-semibold" id="greeting">上午好！ 现在是 --:--:--</div>
+          <div class="mt-1 text-lg hitokoto" id="daily-hitokoto">加载中...</div>
+        </div>
+      </div>
+
+      <!-- 右侧实时天气卡（简洁） -->
+      <div id="banner-weather" class="w-64 bg-white/90 rounded-xl p-4 shadow flex flex-col justify-center">
+        <div class="text-sm text-gray-500">实时天气</div>
+        <div id="bw-desc" class="text-lg font-semibold mt-2">加载中...</div>
+        <div id="bw-temp" class="text-3xl font-bold mt-1">-- ℃</div>
+        <div id="bw-feels" class="text-sm text-gray-600 mt-1">体感 -- ℃</div>
+        <div id="bw-update" class="text-xs text-gray-400 mt-2">更新时间 --</div>
       </div>
     </div>
-
-    <!-- weather -->
-    <section class="mt-6 bg-white rounded-xl p-4 shadow">
-      <h2 class="text-xl font-semibold mb-3">天气</h2>
-      <div id="weather-root" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div id="current-weather" class="p-4 bg-blue-50 rounded">加载实时天气...</div>
-        <div id="five-day" class="p-4 bg-white rounded md:col-span-2">加载 5 天天气...</div>
-      </div>
-      <div class="mt-3">
-        <h3 class="text-sm text-gray-500 mb-2">12 小时内降水（示意）</h3>
-        <div id="hourly-precip" class="flex gap-2 items-end h-24"></div>
-      </div>
-    </section>
 
     <!-- search -->
     <section class="mt-6">
@@ -58,13 +57,13 @@
       </div>
     </section>
 
-    <!-- nav -->
+    <!-- nav (tabs + cards 渲染由 JS 生成) -->
     <section class="mt-6">
-      <div id="nav-root" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+      <div id="nav-root" class="bg-transparent"></div>
     </section>
   </div>
 
-  <!-- settings modal: 添加 flex，使移除 hidden 时居中 -->
+  <!-- settings modal: flex 使移除 hidden 时居中 -->
   <div id="settings-modal" class="fixed inset-0 bg-black/40 hidden flex items-center justify-center">
     <div class="bg-white rounded-xl p-6 w-full max-w-2xl">
       <h3 class="text-lg font-semibold mb-3">设置</h3>
@@ -74,12 +73,23 @@
           <input id="banner-url" class="w-full mt-1 px-3 py-2 border rounded" placeholder="./img/banner.png" />
           <button id="save-banner" class="mt-2 px-3 py-1 bg-indigo-600 text-white rounded">保存 Banner</button>
         </div>
+
+        <div>
+          <label class="block text-sm text-gray-600">倒计时显示</label>
+          <div class="flex items-center gap-3 mt-1">
+            <input type="checkbox" id="show-countdown" />
+            <label for="show-countdown" class="text-sm">显示倒计时</label>
+            <input id="countdown-name" class="ml-4 px-3 py-1 border rounded" placeholder="目标名称（例如：高考）" />
+          </div>
+        </div>
+
         <div>
           <label class="block text-sm text-gray-600">倒计时目标日期</label>
           <input id="countdown-date" type="date" class="mt-1 px-3 py-2 border rounded" />
         </div>
+
         <div>
-          <label class="block text-sm text-gray-600">天气位置（可填经度 纬度 或 使用城市搜索）</label>
+          <label class="block text-sm text-gray-600">天气位置（经度 纬度 或 使用城市搜索）</label>
           <div class="flex gap-2 mt-1">
             <input id="lat-input" placeholder="纬度" class="px-3 py-2 border rounded" />
             <input id="lon-input" placeholder="经度" class="px-3 py-2 border rounded" />
@@ -90,8 +100,27 @@
             <div id="city-results" class="mt-2"></div>
           </div>
         </div>
+
+        <div>
+          <label class="block text-sm text-gray-600">每日语句来源</label>
+          <select id="hitokoto-source" class="mt-1 px-3 py-2 border rounded">
+            <option value="hitokoto">Hitokoto (一言)</option>
+            <option value="gaokao">内置高考语句</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm text-gray-600">默认搜索引擎</label>
+          <select id="default-search-engine" class="mt-1 px-3 py-2 border rounded">
+            <option value="https://www.google.com/search?q=">Google</option>
+            <option value="https://www.baidu.com/s?wd=">百度</option>
+            <option value="https://www.bing.com/search?q=">Bing</option>
+          </select>
+        </div>
+
         <div class="text-right">
-          <button id="close-settings" class="px-3 py-1 bg-gray-200 rounded">关闭</button>
+          <button id="save-settings" class="px-3 py-1 bg-green-600 text-white rounded">保存设置</button>
+          <button id="close-settings" class="px-3 py-1 bg-gray-200 rounded ml-2">关闭</button>
         </div>
       </div>
     </div>
