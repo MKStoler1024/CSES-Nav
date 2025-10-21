@@ -15,8 +15,10 @@
     <div class="flex justify-between items-start py-4">
       <div></div>
       <div class="text-right">
-        <div id="countdown-label" class="text-sm text-gray-500 countdown-font">距 XX 还有</div>
-        <div id="countdown-days" class="text-3xl font-bold countdown-font">0 天</div>
+        <div id="countdown-container" class="flex items-center gap-3">
+          <div id="countdown-label" class="countdown-font text-gray-500">距 XX 还有</div>
+          <div id="countdown-days" class="countdown-font font-bold">0 天</div>
+        </div>
       </div>
       <div class="ml-4">
         <button id="settings-btn" class="px-3 py-1 bg-white rounded shadow hover:shadow-lg transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-300">设置</button>
@@ -91,10 +93,10 @@
         </div>
 
         <div>
-          <label class="block text-sm text-gray-600">天气位置（经度 纬度 或 使用城市搜索）</label>
+          <label class="block text-sm text-gray-600">天气位置城市搜索</label>
           <div class="flex gap-2 mt-1">
-            <input id="lat-input" placeholder="纬度" class="px-3 py-2 border rounded" />
-            <input id="lon-input" placeholder="经度" class="px-3 py-2 border rounded" />
+            <input id="lat-input" placeholder="纬度（可选）" class="px-3 py-2 border rounded" />
+            <input id="lon-input" placeholder="经度（可选）" class="px-3 py-2 border rounded" />
           </div>
           <div class="mt-2">
             <input id="city-search" placeholder="搜索城市名" class="px-3 py-2 border rounded w-2/3" />

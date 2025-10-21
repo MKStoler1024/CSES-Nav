@@ -22,6 +22,13 @@
   const countdownLabel = document.getElementById('countdown-label');
   const countdownDays = document.getElementById('countdown-days');
 
+  // 新增：搜索引擎与一言来源、经纬度控件
+  const searchEngineSelect = document.getElementById('search-engine');
+  const defaultSearchSelect = document.getElementById('default-search-engine');
+  const hitokotoSourceSelect = document.getElementById('hitokoto-source');
+  const latInputElem = document.getElementById('lat-input');
+  const lonInputElem = document.getElementById('lon-input');
+
   const settingsBtn = document.getElementById('settings-btn');
   const settingsModal = document.getElementById('settings-modal');
   const settingsDialog = settingsModal ? settingsModal.querySelector('div') : null;
@@ -99,6 +106,23 @@
     countdownDate && (countdownDate.value = getCookie('countdownDate') || '');
     countdownColorInput && (countdownColorInput.value = getCookie('countdownColor') || '#0f172a');
     bannerUrlInput && (bannerUrlInput.value = getCookie('bannerUrl') || bannerUrlInput.value || './img/banner.png');
+    // 回填默认搜索引擎与一言来源
+    if (defaultSearchSelect) {
+      const dv = getCookie('defaultSearchEngine') || defaultSearchSelect.value;
+      for (let i = 0; i < defaultSearchSelect.options.length; i++) {
+        if (defaultSearchSelect.options[i].value === dv) defaultSearchSelect.selectedIndex = i;
+      }
+    }
+    if (hitokotoSourceSelect) {
+      const hv = getCookie('hitokotoSource') || hitokotoSourceSelect.value;
+      for (let i = 0; i < hitokotoSourceSelect.options.length; i++) {
+        if (hitokotoSourceSelect.options[i].value === hv) hitokotoSourceSelect.selectedIndex = i;
+      }
+    }
+    // 回填经纬度输入框
+    if (latInputElem) latInputElem.value = getCookie('latitude') || latInputElem.value || '';
+    if (lonInputElem) lonInputElem.value = getCookie('longitude') || lonInputElem.value || '';
+
     loadHitokoto();
     settingsModal.classList.remove('hidden'); void settingsModal.offsetWidth;
     settingsModal.classList.add('show');
@@ -117,11 +141,26 @@
     setCookie('showCountdown', showCountdown?.checked ? 'true' : 'false');
     setCookie('countdownName', countdownName?.value || '');
     setCookie('countdownDate', countdownDate?.value || '');
-    setCookie('hitokotoSource', document.getElementById('hitokoto-source')?.value || '');
+    // 保存一言来源与默认搜索引擎
+    if (hitokotoSourceSelect) setCookie('hitokotoSource', hitokotoSourceSelect.value || '');
+    if (defaultSearchSelect) setCookie('defaultSearchEngine', defaultSearchSelect.value || '');
     // countdown color
     if (countdownColorInput && countdownColorInput.value) applyCountdownColor(countdownColorInput.value);
     // banner url saved by its button; but persist current value
     if (bannerUrlInput && bannerUrlInput.value) setCookie('bannerUrl', bannerUrlInput.value);
+    // 保存经纬度（若输入了合法数字）
+    const numRe = /^-?\d+(\.\d+)?$/;
+    if (latInputElem && latInputElem.value.trim() && numRe.test(latInputElem.value.trim())) setCookie('latitude', latInputElem.value.trim());
+    else delCookie('latitude');
+    if (lonInputElem && lonInputElem.value.trim() && numRe.test(lonInputElem.value.trim())) setCookie('longitude', lonInputElem.value.trim());
+    else delCookie('longitude');
+    // 立即将默认搜索引擎应用到主搜索框
+    if (defaultSearchSelect && searchEngineSelect) {
+      for (let i = 0; i < searchEngineSelect.options.length; i++) {
+        if (searchEngineSelect.options[i].value === defaultSearchSelect.value) searchEngineSelect.selectedIndex = i;
+      }
+    }
+
     // apply visibility
     if (showCountdown && countdownLabel && countdownDays) {
       if (showCountdown.checked) { countdownLabel.style.display = ''; countdownDays.style.display = ''; }
@@ -155,6 +194,13 @@
       updateCountdown(); setInterval(updateCountdown, 1000);
       loadHitokoto();
       applyCountdownColor(getCookie('countdownColor') || '#0f172a');
+      // 应用默认搜索引擎到页面主搜索框（若有保存）
+      const dv = getCookie('defaultSearchEngine');
+      if (dv && searchEngineSelect) {
+        for (let i = 0; i < searchEngineSelect.options.length; i++) {
+          if (searchEngineSelect.options[i].value === dv) searchEngineSelect.selectedIndex = i;
+        }
+      }
     }
   };
 
@@ -169,6 +215,24 @@
     }
     if (countdownName) countdownName.value = getCookie('countdownName') || '';
     if (countdownDate) countdownDate.value = getCookie('countdownDate') || '';
+    // restore default search engine & hitokotoSource & lat/lon to inputs
+    const dv = getCookie('defaultSearchEngine');
+    if (dv && searchEngineSelect && defaultSearchSelect) {
+      for (let i = 0; i < searchEngineSelect.options.length; i++) {
+        if (searchEngineSelect.options[i].value === dv) searchEngineSelect.selectedIndex = i;
+      }
+      for (let i = 0; i < defaultSearchSelect.options.length; i++) {
+        if (defaultSearchSelect.options[i].value === dv) defaultSearchSelect.selectedIndex = i;
+      }
+    }
+    const hv = getCookie('hitokotoSource');
+    if (hv && hitokotoSourceSelect) {
+      for (let i = 0; i < hitokotoSourceSelect.options.length; i++) {
+        if (hitokotoSourceSelect.options[i].value === hv) hitokotoSourceSelect.selectedIndex = i;
+      }
+    }
+    if (latInputElem && getCookie('latitude')) latInputElem.value = getCookie('latitude');
+    if (lonInputElem && getCookie('longitude')) lonInputElem.value = getCookie('longitude');
   }
 
 })();

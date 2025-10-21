@@ -3,15 +3,14 @@
     {
       "title": "电教",
       "items": [
-        { "name": "智教联盟", "url": "https://forum.smart-teach.cn" },
+        { "name": "智教联盟论坛", "url": "https://forum.smart-teach.cn" },
         { "name": "思锐工作室", "url": "https://sr-studio.cn" },
         { "name": "宏星工作室", "url": "https://macrostar.top" },
         { "name": "Awesome-Iwb", "url": "https://github.com/Awesome-Iwb/Awesome-Iwb" },
-        { "name": "classisland", "url": "https://classisland.tech" },
-        { "name": "classwidgets", "url": "https://classwidgets.rinlit.cn/zh/" },
+        { "name": "ClassIsland", "url": "https://classisland.tech" },
+        { "name": "Class-Widgets", "url": "https://classwidgets.rinlit.cn/zh/" },
         { "name": "智绘教", "url": "https://www.inkeys.top" },
-        { "name": "ICC-ce", "url": "https://inkcanvasforclass.github.io" },
-        { "name": "iwbicons (图标库)", "url": "https://github.com/awesome-iwb/aiwb-iwbicons" }
+        { "name": "ICC-CE", "url": "https://icc-ce.inkeys.top" }
       ]
     },
     {

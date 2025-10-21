@@ -1,7 +1,20 @@
 :root {
   --container-max: 1900px;
-  --countdown-color: #0f172a; /* 默认倒计时颜色（可被 JS 覆盖） */
+  --countdown-color: #0f172a;
+  /* 默认倒计时颜色（可被 JS 覆盖） */
 }
+
+/* 倒计时字体：统一大小并在一行显示 */
+.countdown-font {
+  font-family: 'ZCOOL XiaoWei', serif;
+  color: var(--countdown-color);
+  font-size: 2rem;
+  /* 统一字号，可调整 */
+  line-height: 1;
+  display: inline-block;
+  transition: color 240ms ease;
+}
+
 .container-root {
   max-width: var(--container-max);
   width: 90%;
@@ -15,13 +28,22 @@
   gap: 1rem;
   align-items: stretch;
 }
-.banner-container { flex: 1 1 auto; min-height: 10rem; height: 10rem; position: relative; overflow: hidden; border-radius: 0.75rem; }
+
+.banner-container {
+  flex: 1 1 auto;
+  min-height: 10rem;
+  height: 10rem;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.75rem;
+}
 
 /* 右侧天气卡与 banner 同高 */
 #banner-weather {
   min-width: 14rem;
   max-width: 18rem;
-  height: 10rem; /* 与 banner-container 保持一致 */
+  height: 10rem;
+  /* 与 banner-container 保持一致 */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -29,27 +51,71 @@
   border-radius: 0.75rem;
   transition: background 300ms ease, color 300ms ease, box-shadow 300ms ease;
   color: inherit;
-  box-shadow: 0 6px 18px rgba(2,6,23,0.06);
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.06);
 }
 
 /* 在卡片内部强制文本继承卡片颜色（覆盖 tailwind 的 text-gray-*） */
-#banner-weather .force-inherit { color: inherit !important; }
+#banner-weather .force-inherit {
+  color: inherit !important;
+}
 
 /* 天气背景/配色（可根据审美调整颜色） */
-.weather-sunny { background: linear-gradient(180deg,#ffd54a,#ffb74d); color: #1f2937; }
-.weather-cloudy { background: linear-gradient(180deg,#cfe9ff,#e6eef9); color: #0f172a; }
-.weather-rain { background: linear-gradient(180deg,#4fc3f7,#0288d1); color: #fff; }
-.weather-storm { background: linear-gradient(180deg,#3a3a52,#1f1f2e); color: #fff; }
-.weather-snow { background: linear-gradient(180deg,#eaf6ff,#cfeefb); color: #0f172a; }
-.weather-fog { background: linear-gradient(180deg,#d7d2cc,#9aa3a8); color: #111827; }
-.weather-dust { background: linear-gradient(180deg,#f3e5ab,#e6be6b); color: #111827; }
-.weather-unknown { background: linear-gradient(180deg,#e0e0e0,#bdbdbd); color: #0f172a; }
+.weather-sunny {
+  background: linear-gradient(180deg, #ffd54a, #ffb74d);
+  color: #1f2937;
+}
+
+.weather-cloudy {
+  background: linear-gradient(180deg, #cfe9ff, #e6eef9);
+  color: #0f172a;
+}
+
+.weather-rain {
+  background: linear-gradient(180deg, #4fc3f7, #0288d1);
+  color: #fff;
+}
+
+.weather-storm {
+  background: linear-gradient(180deg, #3a3a52, #1f1f2e);
+  color: #fff;
+}
+
+.weather-snow {
+  background: linear-gradient(180deg, #eaf6ff, #cfeefb);
+  color: #0f172a;
+}
+
+.weather-fog {
+  background: linear-gradient(180deg, #d7d2cc, #9aa3a8);
+  color: #111827;
+}
+
+.weather-dust {
+  background: linear-gradient(180deg, #f3e5ab, #e6be6b);
+  color: #111827;
+}
+
+.weather-unknown {
+  background: linear-gradient(180deg, #e0e0e0, #bdbdbd);
+  color: #0f172a;
+}
 
 /* 手机下堆叠，取消固定高度以自适应文本 */
 @media (max-width: 768px) {
-  .banner-wrap { flex-direction: column; }
-  .banner-container, #banner-weather { height: auto; min-height: 10rem; }
-  #banner-weather { width: 100%; max-width: none; }
+  .banner-wrap {
+    flex-direction: column;
+  }
+
+  .banner-container,
+  #banner-weather {
+    height: auto;
+    min-height: 10rem;
+  }
+
+  #banner-weather {
+    width: 100%;
+    max-width: none;
+  }
 }
 
 /* 字体应用 */
@@ -57,95 +123,114 @@
   font-family: 'Noto Serif SC', serif;
 }
 
-/* 倒计时字体使用变量并加入过渡 */
-.countdown-font {
-  font-family: 'ZCOOL XiaoWei', serif;
-  color: var(--countdown-color);
-  transition: color 240ms ease;
-}
-
-/* hitokoto 强调色 */
-.hitokoto {
-  color: #ffd073;
-}
-
 /* 导航 - 标签页样式 */
 .nav-tabs {
   display: flex;
   gap: 0.5rem;
   align-items: center;
-  margin-bottom: 0.75rem;
-  flex-wrap: wrap;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  overflow-x: auto;
 }
+
 .nav-tab {
   padding: 0.5rem 0.9rem;
   border-radius: 999px;
-  background: rgba(255,255,255,0.7);
-  border: 1px solid rgba(15,23,42,0.04);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(15, 23, 42, 0.04);
   cursor: pointer;
   transition: all 220ms ease;
-  font-weight: 600;
-}
-.nav-tab:hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(2,6,23,0.06); }
-.nav-tab.active {
-  background: linear-gradient(90deg,#6366f1,#8b5cf6);
-  color: white;
-  box-shadow: 0 10px 25px rgba(139,92,246,0.18);
+  font-weight: 700;
+  color: #374151;
+  white-space: nowrap;
 }
 
-/* nav 内容卡片 */
-.nav-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
+.nav-tab:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(2, 6, 23, 0.06);
 }
-.nav-card {
+
+.nav-tab.active {
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  color: white;
+  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.18);
+}
+
+/* 导航卡片网格：改为固定宽度卡片，超长文本省略 */
+.nav-grid {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.fixed-card {
+  width: 200px;
+  /* 固定宽度 */
+  min-height: 80px;
   padding: 12px;
   border-radius: 12px;
-  background: linear-gradient(180deg,#ffffff,#fbfbff);
-  border: 1px solid rgba(2,6,23,0.04);
-  box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+  background: linear-gradient(180deg, #ffffff, #fbfbff);
+  border: 1px solid rgba(2, 6, 23, 0.04);
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.04);
   transition: transform 220ms ease, box-shadow 220ms ease;
-}
-.nav-item {
-  display: block;
-  padding: 10px;
-  border-radius: 8px;
-  background: white;
-  border: 1px solid rgba(2,6,23,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  transition: transform 180ms ease, box-shadow 180ms ease;
-  cursor: pointer;
-  color: #0f172a;
-  font-weight: 500;
+  overflow: hidden;
 }
-.nav-item:hover { transform: translateY(-6px); box-shadow: 0 10px 18px rgba(2,6,23,0.08); }
+
+.fixed-card .nav-item {
+  display: block;
+  width: 100%;
+  color: #0f172a;
+  font-weight: 600;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* 单行省略 */
+}
+
+.fixed-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(2, 6, 23, 0.08);
+}
 
 /* modal 入场动画 */
 #settings-modal {
-  display: none; /* 默认不可见 */
+  display: none;
+  /* 默认不可见 */
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
   align-items: center;
   justify-content: center;
   z-index: 60;
 }
+
 #settings-modal.show {
   display: flex !important;
 }
 
 /* modal 显示修复：支持 tailwind 的 hidden，同时 .show 强制显示 */
-#settings-modal.hidden { display: none !important; }
-#settings-modal.show { display: flex !important; }
+#settings-modal.hidden {
+  display: none !important;
+}
+
+#settings-modal.show {
+  display: flex !important;
+}
 
 /* 保持原有子元素入场动画规则（保留已存在实现） */
-#settings-modal > div {
+#settings-modal>div {
   transform: translateY(10px) scale(.995);
-  transition: transform 260ms cubic-bezier(.2,.9,.3,1), opacity 260ms ease;
+  transition: transform 260ms cubic-bezier(.2, .9, .3, 1), opacity 260ms ease;
   opacity: 0;
 }
-#settings-modal.show > div {
+
+#settings-modal.show>div {
   transform: translateY(0) scale(1);
   opacity: 1;
 }
@@ -167,9 +252,10 @@
 
 /* 悬停时仅放大 Banner 的文字（字体放大），并添加平滑过渡（保持原行为） */
 .banner-font {
-  transition: transform 420ms cubic-bezier(.2,.9,.3,1);
+  transition: transform 420ms cubic-bezier(.2, .9, .3, 1);
   transform-origin: left top;
 }
+
 .banner-container:hover .banner-font {
   transform: scale(1.06);
 }
@@ -179,27 +265,48 @@
   align-items: start;
   gap: 0.5rem;
 }
-#weather-root > div {
+
+#weather-root>div {
   padding: 0.6rem;
   min-height: 3.2rem;
 }
 
 /* 动画 keyframes */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(10px) scale(0.995); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.995);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
+
 .animate-fade-in-up {
   animation-name: fadeInUp;
   animation-duration: 420ms;
   animation-fill-mode: both;
-  animation-timing-function: cubic-bezier(.2,.9,.3,1);
+  animation-timing-function: cubic-bezier(.2, .9, .3, 1);
 }
 
 /* 响应式微调 */
 @media (max-width: 768px) {
-  .container-root { width: 96%; }
-  .nav-content { grid-template-columns: repeat(2, 1fr); }
-  .banner-wrap { flex-direction: column; }
-  #banner-weather { width: 100%; max-width: none; }
+  .container-root {
+    width: 96%;
+  }
+
+  .nav-content {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .banner-wrap {
+    flex-direction: column;
+  }
+
+  #banner-weather {
+    width: 100%;
+    max-width: none;
+  }
 }

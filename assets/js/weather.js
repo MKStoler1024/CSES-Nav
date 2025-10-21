@@ -58,6 +58,12 @@
     const locParam = locationKey ? `&locationKey=weathercn%3A${encodeURIComponent(locationKey)}` : '';
     const sign = 'zUFJoAR2ZVrDy1vF3D07';
     const appKey = 'weather20151024';
+    const url = `https://all.hlmirror.com/https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?${baseParams}${locParam}&days=5&appKey=${encodeURIComponent(appKey)}&sign=${encodeURIComponent(sign)}&isGlobal=false&locale=zh_cn`;
+
+    try {
+      const res = await fetch(url);
+      const j = await res.json();
+      const cur = j?.current || {};
       const temp = cur.temperature?.value ?? '--';
       const unit = cur.temperature?.unit ?? '℃';
       const feels = cur.feelsLike?.value ?? '--';
@@ -89,8 +95,94 @@
     timer = setTimeout(fetchAndRenderWeather, 10 * 60 * 1000);
   }
 
+  // 新增：城市搜索（兼容多种返回结构），返回标准化数组
+  async function searchCities(name) {
+    try {
+      const url = name
+        ? `https://all.hlmirror.com/https://weatherapi.market.xiaomi.com/wtr-v3/location/city/search?name=${encodeURIComponent(name)}&locale=zh_cn`
+        : `https://all.hlmirror.com/https://weatherapi.market.xiaomi.com/wtr-v3/location/city/hots?locale=zh_cn`;
+      const res = await fetch(url);
+      const j = await res.json();
+
+      const list = Array.isArray(j) ? j : (Array.isArray(j?.data) ? j.data : []);
+      const cities = (list || []).map(ci => {
+        const locKey = ci.LocationKey || ci.locationKey || ci.key || '';
+        const nameVal = ci.Name || ci.name || ci.name || '';
+        const aff = ci.Affiliation || ci.affiliation || '';
+        let cityId = '';
+        if (locKey) {
+          const parts = String(locKey).split(':');
+          cityId = parts.length > 1 ? parts[1] : parts[0];
+        } else if (ci.city_num) {
+          cityId = String(ci.city_num);
+        }
+        const latitude = (ci.latitude || ci.lat || ci.Latitude || '').toString();
+        const longitude = (ci.longitude || ci.lon || ci.Longitude || '').toString();
+        return {
+          label: aff ? `${nameVal} (${aff})` : nameVal || locKey,
+          cityId,
+          latitude,
+          longitude
+        };
+      }).filter(x => x.cityId);
+      return cities;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  // 新增：将搜索结果渲染到页面并处理选择
+  async function bindCitySearchUI() {
+    const btn = document.getElementById('city-search-btn');
+    const input = document.getElementById('city-search');
+    const results = document.getElementById('city-results');
+    if (!btn || !input || !results) return;
+
+    async function doSearch() {
+      const q = input.value.trim();
+      results.innerHTML = '搜索中...';
+      const found = await searchCities(q);
+      results.innerHTML = '';
+      if (!found.length) { results.textContent = '未找到城市'; return; }
+      found.forEach(c => {
+        const row = document.createElement('div');
+        row.className = 'py-1';
+        const btnEl = document.createElement('button');
+        btnEl.className = 'block w-full text-left px-2 py-1 hover:bg-gray-100';
+        btnEl.textContent = c.label;
+        btnEl.addEventListener('click', () => {
+          // 保存 locationKey 与可能的经纬度（仅保存合法数字）
+          setCookie('locationKey', c.cityId);
+          const validNum = v => typeof v === 'string' && /^-?\d+(\.\d+)?$/.test(v.trim());
+          if (validNum(c.latitude)) {
+            setCookie('latitude', c.latitude.trim());
+            const latInput = document.getElementById('lat-input'); if (latInput) latInput.value = c.latitude.trim();
+          } else {
+            delCookie('latitude'); const latInput = document.getElementById('lat-input'); if (latInput) latInput.value = '';
+          }
+          if (validNum(c.longitude)) {
+            setCookie('longitude', c.longitude.trim());
+            const lonInput = document.getElementById('lon-input'); if (lonInput) lonInput.value = c.longitude.trim();
+          } else {
+            delCookie('longitude'); const lonInput = document.getElementById('lon-input'); if (lonInput) lonInput.value = '';
+          }
+          results.innerHTML = `已选择 ${c.label}`;
+          // 立即刷新天气
+          fetchAndRenderWeather(true);
+        });
+        row.appendChild(btnEl);
+        results.appendChild(row);
+      });
+    }
+
+    btn.addEventListener('click', doSearch);
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSearch(); });
+  }
+
+  // 在 init 时绑定 city search UI（调用于 window.Weather.init）
   window.Weather = {
-    init: function(){ loadStatusCodes().then(fetchAndRenderWeather); },
-    refresh: fetchAndRenderWeather
+    init: function(){ loadStatusCodes().then(() => { fetchAndRenderWeather(); bindCitySearchUI(); }); },
+    refresh: fetchAndRenderWeather,
+    searchCities // 暴露以便调试
   };
 })();
