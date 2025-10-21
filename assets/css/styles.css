@@ -1,5 +1,6 @@
 :root {
   --container-max: 1900px;
+  --countdown-color: #0f172a; /* 默认倒计时颜色（可被 JS 覆盖） */
 }
 .container-root {
   max-width: var(--container-max);
@@ -55,8 +56,12 @@
 .banner-font {
   font-family: 'Noto Serif SC', serif;
 }
+
+/* 倒计时字体使用变量并加入过渡 */
 .countdown-font {
   font-family: 'ZCOOL XiaoWei', serif;
+  color: var(--countdown-color);
+  transition: color 240ms ease;
 }
 
 /* hitokoto 强调色 */

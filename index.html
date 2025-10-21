@@ -6,7 +6,7 @@
   <title>仪表盘</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts for countdown and banner -->
-  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://all.hlmirror.com/https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/css/styles.css" />
 </head>
 <body class="bg-gray-50">
@@ -80,6 +80,8 @@
             <input type="checkbox" id="show-countdown" />
             <label for="show-countdown" class="text-sm">显示倒计时</label>
             <input id="countdown-name" class="ml-4 px-3 py-1 border rounded" placeholder="目标名称（例如：高考）" />
+            <!-- 新增倒计时颜色选择 -->
+            <input id="countdown-color" type="color" class="ml-3 w-10 h-10 p-0 border rounded" title="倒计时颜色" />
           </div>
         </div>
 
@@ -126,6 +128,10 @@
     </div>
   </div>
 
-  <script src="./assets/js/app.js"></script>
+  <!-- 拆分后的脚本 -->
+  <script src="./assets/js/ui.js"></script>
+  <script src="./assets/js/weather.js"></script>
+  <script src="./assets/js/nav.js"></script>
+  <script src="./assets/js/main.js"></script>
 </body>
 </html>

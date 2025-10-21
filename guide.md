@@ -688,3 +688,5 @@ json 示例：
     }
   ]
 }
+
+注意：示例中使用了 Tailwind CDN 方便开发与演示。但官方不建议在生产环境使用 CDN（见警告）。生产环境请考虑按官方文档安装 Tailwind（PostCSS 插件或 Tailwind CLI），参考：https://tailwindcss.com/docs/installation
