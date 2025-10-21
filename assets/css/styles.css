@@ -291,22 +291,54 @@
   animation-timing-function: cubic-bezier(.2, .9, .3, 1);
 }
 
-/* 响应式微调 */
-@media (max-width: 768px) {
-  .container-root {
-    width: 96%;
-  }
-
-  .nav-content {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .banner-wrap {
-    flex-direction: column;
-  }
-
-  #banner-weather {
-    width: 100%;
-    max-width: none;
-  }
+/* 搜索区 UI 优化 */
+#search-form { align-items: center; }
+.search-input {
+  font-size: 1rem;
+  line-height: 1.25rem;
+  background: transparent;
+  border-radius: 0.75rem;
+  box-shadow: none;
 }
+.search-input::placeholder { color: #9CA3AF; }
+
+.search-clear {
+  background: transparent;
+  border: none;
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* 当输入非空时显示清除按钮（可由 JS 切换 .hidden / remove） */
+.search-clear:not(.hidden) { display: inline-flex; }
+
+/* 搜索引擎选择样式 */
+.search-engine-select {
+  min-width: 10rem;
+  max-width: 12rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(15,23,42,0.06);
+  background: #fff;
+}
+
+/* 搜索按钮样式 */
+.search-btn {
+  min-width: 5.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 6px 14px rgba(99,102,241,0.08);
+}
+
+/* 在窄屏时让选择和按钮更紧凑 */
+@media (max-width: 640px) {
+  #search-form { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+  .search-engine-select { width: 100%; max-width: none; }
+  .search-btn { width: 100%; }
+}
+
+/* 鼠标悬停与聚焦的微交互 */
+.search-input:focus { box-shadow: 0 6px 18px rgba(99,102,241,0.06); }
+.search-engine-select:focus, .search-btn:focus { outline: none; box-shadow: 0 6px 18px rgba(99,102,241,0.06); }
+
+/* 保持现有样式不变 */

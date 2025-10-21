@@ -48,15 +48,22 @@
 
     <!-- search -->
     <section class="mt-6">
-      <div class="bg-white rounded-xl p-4 shadow flex gap-3 items-center">
-        <select id="search-engine" class="px-2 py-1 border rounded">
+      <form id="search-form" class="bg-white rounded-xl p-3 shadow flex gap-3 items-center">
+        <div class="relative flex-1">
+          <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+            <!-- search icon -->
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/></svg>
+          </span>
+          <input id="search-input" class="search-input pl-12 pr-10 py-3 w-full rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 transition" placeholder="搜索网页或输入网址，回车或点击搜索" />
+          <button type="button" id="search-clear" class="search-clear hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">✕</button>
+        </div>
+        <select id="search-engine" class="search-engine-select px-3 py-2 rounded-lg border bg-white">
           <option value="https://www.google.com/search?q=">Google</option>
           <option value="https://www.baidu.com/s?wd=">百度</option>
           <option value="https://www.bing.com/search?q=">Bing</option>
         </select>
-        <input id="search-input" class="flex-1 px-3 py-2 border rounded" placeholder="输入搜索，回车或点击搜索" />
-        <button id="search-btn" class="px-4 py-2 bg-indigo-600 text-white rounded">搜索</button>
-      </div>
+        <button id="search-btn" class="search-btn px-5 py-2 bg-indigo-600 text-white rounded-lg hover:shadow-lg transition">搜索</button>
+      </form>
     </section>
 
     <!-- nav (tabs + cards 渲染由 JS 生成) -->
