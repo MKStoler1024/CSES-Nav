@@ -177,6 +177,32 @@
     if (bannerImg) bannerImg.src = url;
   });
 
+  // 新增：搜索区域交互绑定（回车、按钮、清除）
+  function bindSearchUI() {
+    const form = document.getElementById('search-form');
+    const input = document.getElementById('search-input');
+    const btn = document.getElementById('search-btn');
+    const clear = document.getElementById('search-clear');
+    const engine = document.getElementById('search-engine');
+
+    function doSearch() {
+      if (!input || !engine) return;
+      const q = input.value.trim();
+      if (!q) return;
+      const url = engine.value + encodeURIComponent(q);
+      window.open(url, '_blank');
+    }
+
+    form?.addEventListener('submit', (e) => { e.preventDefault(); doSearch(); });
+    btn?.addEventListener('click', (e) => { e.preventDefault(); doSearch(); });
+    input?.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); doSearch(); } });
+    input?.addEventListener('input', () => {
+      if (!clear) return;
+      if (input.value.trim()) clear.classList.remove('hidden'); else clear.classList.add('hidden');
+    });
+    clear?.addEventListener('click', () => { if (!input) return; input.value = ''; clear.classList.add('hidden'); input.focus(); });
+  }
+
   // attach events
   settingsBtn?.addEventListener('click', openSettings);
   closeSettingsBtn?.addEventListener('click', closeSettingsModal);
@@ -194,6 +220,8 @@
       updateCountdown(); setInterval(updateCountdown, 1000);
       loadHitokoto();
       applyCountdownColor(getCookie('countdownColor') || '#0f172a');
+      // 新增：绑定搜索交互
+      bindSearchUI();
       // 应用默认搜索引擎到页面主搜索框（若有保存）
       const dv = getCookie('defaultSearchEngine');
       if (dv && searchEngineSelect) {
