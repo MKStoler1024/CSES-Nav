@@ -74,65 +74,101 @@
 
   <!-- settings modal: flex 使移除 hidden 时居中 -->
   <div id="settings-modal" class="fixed inset-0 bg-black/40 hidden flex items-center justify-center">
-    <div class="bg-white rounded-xl p-6 w-full max-w-2xl">
-      <h3 class="text-lg font-semibold mb-3">设置</h3>
-      <div class="space-y-3">
-        <div>
-          <label class="block text-sm text-gray-600">Banner 图片 URL</label>
-          <input id="banner-url" class="w-full mt-1 px-3 py-2 border rounded" placeholder="./img/banner.png" />
-          <button id="save-banner" class="mt-2 px-3 py-1 bg-indigo-600 text-white rounded">保存 Banner</button>
-        </div>
+    <div class="bg-white rounded-xl p-6 w-full max-w-3xl settings-panel shadow-lg">
+      <div class="flex items-start justify-between mb-4">
+        <h3 class="text-xl font-semibold">设置</h3>
+        <button id="close-settings" class="text-gray-500 hover:text-gray-800">关闭 ✕</button>
+      </div>
 
-        <div>
-          <label class="block text-sm text-gray-600">倒计时显示</label>
-          <div class="flex items-center gap-3 mt-1">
-            <input type="checkbox" id="show-countdown" />
-            <label for="show-countdown" class="text-sm">显示倒计时</label>
-            <input id="countdown-name" class="ml-4 px-3 py-1 border rounded" placeholder="目标名称（例如：高考）" />
-            <!-- 新增倒计时颜色选择 -->
-            <input id="countdown-color" type="color" class="ml-3 w-10 h-10 p-0 border rounded" title="倒计时颜色" />
+      <!-- Grid: 左右两栏（宽屏），单列（窄屏） -->
+      <div class="settings-grid">
+        <!-- Banner 区 -->
+        <section class="settings-section">
+          <h4 class="section-title">Banner</h4>
+          <div class="space-y-2">
+            <label class="text-sm text-gray-600">Banner 图片 URL</label>
+            <div class="flex gap-2">
+              <input id="banner-url" class="flex-1 px-3 py-2 border rounded" placeholder="./img/banner.png" />
+              <button id="save-banner" class="px-3 py-2 bg-indigo-600 text-white rounded">保存</button>
+              <button id="reset-banner" class="px-3 py-2 bg-gray-100 rounded" title="恢复默认">恢复</button>
+            </div>
+            <div class="mt-2">
+              <img id="banner-preview" src="./img/banner.png" alt="banner preview" class="banner-preview rounded-md border" />
+            </div>
+            <p class="text-xs text-gray-500">支持外部 URL，保存后会即时生效。</p>
           </div>
-        </div>
+        </section>
 
-        <div>
-          <label class="block text-sm text-gray-600">倒计时目标日期</label>
-          <input id="countdown-date" type="date" class="mt-1 px-3 py-2 border rounded" />
-        </div>
+        <!-- 倒计时 区 -->
+        <section class="settings-section">
+          <h4 class="section-title">倒计时</h4>
+          <div class="space-y-2">
+            <div class="flex items-center gap-3">
+              <input type="checkbox" id="show-countdown" />
+              <label for="show-countdown" class="text-sm">显示倒计时</label>
+            </div>
 
-        <div>
-          <label class="block text-sm text-gray-600">天气位置城市搜索</label>
-          <div class="flex gap-2 mt-1">
-            <input id="lat-input" placeholder="纬度（可选）" class="px-3 py-2 border rounded" />
-            <input id="lon-input" placeholder="经度（可选）" class="px-3 py-2 border rounded" />
+            <div class="grid grid-cols-1 gap-2">
+              <label class="text-sm text-gray-600">目标名称</label>
+              <input id="countdown-name" class="px-3 py-2 border rounded" placeholder="例如：高考" />
+
+              <label class="text-sm text-gray-600">目标日期</label>
+              <input id="countdown-date" type="date" class="px-3 py-2 border rounded" />
+
+              <label class="text-sm text-gray-600">倒计时颜色</label>
+              <input id="countdown-color" type="color" class="p-0 w-12 h-10 border rounded" />
+            </div>
+            <p class="text-xs text-gray-500">修改后点击下方“保存设置”生效（颜色即时应用）。</p>
           </div>
-          <div class="mt-2">
-            <input id="city-search" placeholder="搜索城市名" class="px-3 py-2 border rounded w-2/3" />
-            <button id="city-search-btn" class="px-3 py-1 bg-gray-800 text-white rounded ml-2">搜索城市</button>
-            <div id="city-results" class="mt-2"></div>
+        </section>
+
+        <!-- 搜索与一言 区 -->
+        <section class="settings-section">
+          <h4 class="section-title">搜索 & 每日语句</h4>
+          <div class="space-y-2">
+            <label class="text-sm text-gray-600">默认搜索引擎</label>
+            <select id="default-search-engine" class="w-full px-3 py-2 border rounded">
+              <option value="https://www.google.com/search?q=">Google</option>
+              <option value="https://www.baidu.com/s?wd=">百度</option>
+              <option value="https://www.bing.com/search?q=">Bing</option>
+            </select>
+
+            <label class="text-sm text-gray-600">每日语句来源</label>
+            <select id="hitokoto-source" class="w-full px-3 py-2 border rounded">
+              <option value="hitokoto">Hitokoto (一言)</option>
+              <option value="gaokao">内置高考语句</option>
+            </select>
+            <p class="text-xs text-gray-500">选择“内置高考语句”可在 Banner 显示鼓励短语。</p>
           </div>
-        </div>
+        </section>
 
-        <div>
-          <label class="block text-sm text-gray-600">每日语句来源</label>
-          <select id="hitokoto-source" class="mt-1 px-3 py-2 border rounded">
-            <option value="hitokoto">Hitokoto (一言)</option>
-            <option value="gaokao">内置高考语句</option>
-          </select>
-        </div>
+        <!-- 天气 定位 区 -->
+        <section class="settings-section">
+          <h4 class="section-title">天气位置</h4>
+          <div class="space-y-2">
+            <div class="flex gap-2">
+              <input id="lat-input" placeholder="纬度（可选）" class="flex-1 px-3 py-2 border rounded" />
+              <input id="lon-input" placeholder="经度（可选）" class="flex-1 px-3 py-2 border rounded" />
+            </div>
 
-        <div>
-          <label class="block text-sm text-gray-600">默认搜索引擎</label>
-          <select id="default-search-engine" class="mt-1 px-3 py-2 border rounded">
-            <option value="https://www.google.com/search?q=">Google</option>
-            <option value="https://www.baidu.com/s?wd=">百度</option>
-            <option value="https://www.bing.com/search?q=">Bing</option>
-          </select>
-        </div>
+            <div class="mt-2">
+              <label class="text-sm text-gray-600">按城市搜索定位</label>
+              <div class="flex gap-2 mt-1">
+                <input id="city-search" placeholder="输入城市名" class="flex-1 px-3 py-2 border rounded" />
+                <button id="city-search-btn" class="px-3 py-2 bg-gray-800 text-white rounded">搜索</button>
+              </div>
+              <div id="city-results" class="mt-2 text-sm text-gray-700"></div>
+            </div>
 
-        <div class="text-right">
-          <button id="save-settings" class="px-3 py-1 bg-green-600 text-white rounded">保存设置</button>
-          <button id="close-settings" class="px-3 py-1 bg-gray-200 rounded ml-2">关闭</button>
-        </div>
+            <p class="text-xs text-gray-500">若填入经纬度，则优先使用；否则搜索并选择城市后自动保存。</p>
+          </div>
+        </section>
+      </div>
+
+      <!-- 操作区 -->
+      <div class="mt-4 flex justify-end gap-3">
+        <button id="save-settings" class="px-4 py-2 bg-green-600 text-white rounded">保存设置</button>
+        <button id="close-settings-bottom" class="px-4 py-2 bg-gray-200 rounded">取消</button>
       </div>
     </div>
   </div>

@@ -34,6 +34,10 @@
   const settingsDialog = settingsModal ? settingsModal.querySelector('div') : null;
   const closeSettingsBtn = document.getElementById('close-settings');
   const saveSettings = document.getElementById('save-settings');
+  // 新增：底部取消、重置 banner 与预览引用
+  const closeSettingsBottom = document.getElementById('close-settings-bottom');
+  const resetBannerBtn = document.getElementById('reset-banner');
+  const bannerPreview = document.getElementById('banner-preview');
 
   // 内置每日语句（高考 / 鼓励用语）
   const dailyQuotes = [
@@ -106,7 +110,7 @@
     countdownDate && (countdownDate.value = getCookie('countdownDate') || '');
     countdownColorInput && (countdownColorInput.value = getCookie('countdownColor') || '#0f172a');
     bannerUrlInput && (bannerUrlInput.value = getCookie('bannerUrl') || bannerUrlInput.value || './img/banner.png');
-    // 回填默认搜索引擎与一言来源
+    // 回填默认搜索引擎与一言来源（修复：使用 hitokotoSourceSelect）
     if (defaultSearchSelect) {
       const dv = getCookie('defaultSearchEngine') || defaultSearchSelect.value;
       for (let i = 0; i < defaultSearchSelect.options.length; i++) {
@@ -175,6 +179,22 @@
     const url = (bannerUrlInput?.value || './img/banner.png').trim();
     setCookie('bannerUrl', url);
     if (bannerImg) bannerImg.src = url;
+    if (bannerPreview) bannerPreview.src = url || './img/banner.png';
+  });
+
+  // 实时预览 banner URL（输入时预览，不保存）
+  bannerUrlInput?.addEventListener('input', () => {
+    const v = (bannerUrlInput.value || '').trim() || './img/banner.png';
+    if (bannerPreview) bannerPreview.src = v;
+  });
+  
+  // 恢复默认 banner（预览并立即写 cookie + 主 banner）
+  resetBannerBtn?.addEventListener('click', () => {
+    const def = './img/banner.png';
+    bannerUrlInput.value = def;
+    if (bannerPreview) bannerPreview.src = def;
+    setCookie('bannerUrl', def);
+    if (bannerImg) bannerImg.src = def;
   });
 
   // 新增：搜索区域交互绑定（回车、按钮、清除）
@@ -185,10 +205,32 @@
     const clear = document.getElementById('search-clear');
     const engine = document.getElementById('search-engine');
 
+    function isLikelyUrl(s) {
+      if (!s) return false;
+      s = s.trim();
+      // 已有协议
+      if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(s)) return true;
+      // 简单域名判断：包含点且无空白字符（排除一般搜索词）
+      if (/\s/.test(s)) return false;
+      // 要求至少有一个点且不是纯数字点组合
+      if (/\./.test(s) && !/^[\d.]+$/.test(s)) return true;
+      return false;
+    }
+
     function doSearch() {
-      if (!input || !engine) return;
+      if (!input) return;
       const q = input.value.trim();
       if (!q) return;
+      // 若识别为 URL，则直接跳转（无协议自动补 https://）
+      if (isLikelyUrl(q)) {
+        let url = q;
+        if (!/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(url)) {
+          url = 'https://' + url;
+        }
+        window.open(url, '_blank');
+        return;
+      }
+      if (!engine) return;
       const url = engine.value + encodeURIComponent(q);
       window.open(url, '_blank');
     }
@@ -206,6 +248,7 @@
   // attach events
   settingsBtn?.addEventListener('click', openSettings);
   closeSettingsBtn?.addEventListener('click', closeSettingsModal);
+  closeSettingsBottom?.addEventListener('click', closeSettingsModal); // 底部取消按钮关闭
   saveSettings?.addEventListener('click', saveAllSettings);
   if (settingsModal && settingsDialog) {
     settingsModal.addEventListener('click', (e)=> { if (e.target === settingsModal) closeSettingsModal(); });
@@ -236,6 +279,7 @@
     // restore banner url
     const b = getCookie('bannerUrl');
     if (b && bannerImg) bannerImg.src = b;
+    if (b && bannerPreview) bannerPreview.src = b;
     // restore countdown visibility & name/date
     if (showCountdown) {
       const sc = getCookie('showCountdown');
@@ -243,7 +287,7 @@
     }
     if (countdownName) countdownName.value = getCookie('countdownName') || '';
     if (countdownDate) countdownDate.value = getCookie('countdownDate') || '';
-    // restore default search engine & hitokotoSource & lat/lon to inputs
+    // restore default search engine & hitokotoSource & lat/lon to inputs (修复：使用 hitokotoSourceSelect)
     const dv = getCookie('defaultSearchEngine');
     if (dv && searchEngineSelect && defaultSearchSelect) {
       for (let i = 0; i < searchEngineSelect.options.length; i++) {
