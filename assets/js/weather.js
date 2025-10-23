@@ -58,7 +58,7 @@
     const locParam = locationKey ? `&locationKey=weathercn%3A${encodeURIComponent(locationKey)}` : '';
     const sign = 'zUFJoAR2ZVrDy1vF3D07';
     const appKey = 'weather20151024';
-    const url = `https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?${baseParams}${locParam}&days=5&appKey=${encodeURIComponent(appKey)}&sign=${encodeURIComponent(sign)}&isGlobal=false&locale=zh_cn`;
+    const url = `https://miweather.edicdn.eu.org/https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?${baseParams}${locParam}&days=5&appKey=${encodeURIComponent(appKey)}&sign=${encodeURIComponent(sign)}&isGlobal=false&locale=zh_cn`;
 
     try {
       const res = await fetch(url);
@@ -99,8 +99,8 @@
   async function searchCities(name) {
     try {
       const url = name
-        ? `https://weatherapi.market.xiaomi.com/wtr-v3/location/city/search?name=${encodeURIComponent(name)}&locale=zh_cn`
-        : `https://weatherapi.market.xiaomi.com/wtr-v3/location/city/hots?locale=zh_cn`;
+        ? `https://miweather.edicdn.eu.org/https://weatherapi.market.xiaomi.com/wtr-v3/location/city/search?name=${encodeURIComponent(name)}&locale=zh_cn`
+        : `https://miweather.edicdn.eu.org/https://weatherapi.market.xiaomi.com/wtr-v3/location/city/hots?locale=zh_cn`;
       const res = await fetch(url);
       const j = await res.json();
 
